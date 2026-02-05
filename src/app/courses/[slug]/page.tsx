@@ -19,14 +19,30 @@ export async function generateMetadata({
     };
   }
 
+  const description = course.shortDescription ?? course.description;
+
   return {
     title: course.title,
-    description: course.shortDescription ?? course.description,
+    description,
     keywords: [...course.topics, ...course.skills],
     openGraph: {
       title: course.title,
-      description: course.shortDescription ?? course.description,
+      description,
       type: 'article',
+      siteName: 'Course Hub',
+      locale: course.metadata.language,
+      authors: course.instructors,
+      publishedTime: course.createdAt,
+      modifiedTime: course.updatedAt,
+      tags: course.topics,
+      ...(course.thumbnail && {
+        images: [{ url: course.thumbnail, alt: course.title }],
+      }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: course.title,
+      description,
       ...(course.thumbnail && { images: [course.thumbnail] }),
     },
   };

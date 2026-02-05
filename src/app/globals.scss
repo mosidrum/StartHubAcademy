@@ -2,71 +2,34 @@
 @use '../styles/variables' as vars;
 @use '../styles/mixins' as mix;
 
-// Tailwind CSS
 @import 'tailwindcss';
 
-// CSS Custom Properties for theming
 :root {
-  // Colors
   --color-primary: #{palette.color('primary-600')};
-  --color-primary-hover: #{palette.color('primary-700')};
-  --color-primary-light: #{palette.color('primary-100')};
-
   --color-background: #{palette.color('neutral-50')};
   --color-foreground: #{palette.color('neutral-900')};
   --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-
   --color-border: #{palette.color('neutral-200')};
-  --color-border-hover: #{palette.color('neutral-300')};
-
   --color-text-primary: #{palette.color('neutral-900')};
   --color-text-secondary: #{palette.color('neutral-600')};
   --color-text-muted: #{palette.color('neutral-400')};
-
-  --color-success: #{palette.color('success')};
-  --color-warning: #{palette.color('warning')};
-  --color-error: #{palette.color('error')};
-  --color-info: #{palette.color('info')};
-
-  // Typography
-  --font-sans: #{vars.$font-family-sans};
-  --font-mono: #{vars.$font-family-mono};
-
-  // Spacing
-  --container-padding: #{vars.$spacing-4};
-
-  @include mix.md {
-    --container-padding: #{vars.$spacing-6};
-  }
-
-  @include mix.lg {
-    --container-padding: #{vars.$spacing-8};
-  }
+  --font-sans: var(--font-geist-sans), #{vars.$font-family-sans};
+  --font-mono: var(--font-geist-mono), #{vars.$font-family-mono};
 }
 
-// Dark mode
 @media (prefers-color-scheme: dark) {
   :root {
     --color-primary: #{palette.color('primary-500')};
-    --color-primary-hover: #{palette.color('primary-400')};
-    --color-primary-light: #{palette.color('primary-900')};
-
     --color-background: #{palette.color('neutral-900')};
     --color-foreground: #{palette.color('neutral-50')};
     --color-surface: #{palette.color('neutral-800')};
-    --color-surface-elevated: #{palette.color('neutral-700')};
-
     --color-border: #{palette.color('neutral-700')};
-    --color-border-hover: #{palette.color('neutral-600')};
-
     --color-text-primary: #{palette.color('neutral-50')};
     --color-text-secondary: #{palette.color('neutral-300')};
     --color-text-muted: #{palette.color('neutral-500')};
   }
 }
 
-// Tailwind theme integration
 @theme inline {
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
@@ -74,7 +37,6 @@
   --font-mono: var(--font-mono);
 }
 
-// Base styles
 *,
 *::before,
 *::after {
@@ -83,10 +45,10 @@
 
 html {
   font-family: var(--font-sans);
-  font-size: 16px;
   line-height: vars.$line-height-normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -95,40 +57,17 @@ body {
   color: var(--color-text-primary);
 }
 
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-
-  &:hover {
-    color: var(--color-primary-hover);
-  }
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
+img, video {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: vars.$font-weight-semibold;
   line-height: vars.$line-height-tight;
+  text-wrap: balance;
 }
 
 h1 { font-size: vars.$font-size-4xl; }
@@ -138,7 +77,23 @@ h4 { font-size: vars.$font-size-xl; }
 
 p { margin: 0; }
 
-// Container utility class
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
 .container {
   @include mix.container;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

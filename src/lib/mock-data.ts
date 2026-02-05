@@ -49,7 +49,8 @@ export const courses: Course[] = [
     id: 'course_2',
     slug: 'advanced-react-patterns',
     title: 'Advanced React Patterns',
-    description: 'Deep dive into advanced React patterns and performance optimization.',
+    description:
+      'Deep dive into advanced React patterns and performance optimization.',
     shortDescription: 'Level up your React skills',
     providerId: 'prov_2',
     providerCourseId: 'react-adv',

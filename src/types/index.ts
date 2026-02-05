@@ -1,5 +1,10 @@
 // Provider types
-export type ProviderSlug = 'coursera' | 'udemy' | 'edx' | 'pluralsight' | 'linkedin-learning';
+export type ProviderSlug =
+  | 'coursera'
+  | 'udemy'
+  | 'edx'
+  | 'pluralsight'
+  | 'linkedin-learning';
 
 export interface Provider {
   id: string;
@@ -59,7 +64,14 @@ export interface Course {
 // Utility types
 export type CoursePreview = Pick<
   Course,
-  'id' | 'slug' | 'title' | 'shortDescription' | 'thumbnail' | 'level' | 'duration' | 'price'
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'shortDescription'
+  | 'thumbnail'
+  | 'level'
+  | 'duration'
+  | 'price'
 > & {
   providerName: string;
 };

@@ -29,6 +29,7 @@ The `server-only` package marks data-fetching modules to prevent accidental clie
 **JSON-LD Structured Data**: Course pages include Schema.org `Course` markup for rich search results. The schema is serialized server-side and injected as `<script type="application/ld+json">`.
 
 **Crawlability**:
+
 - `robots.ts` generates `/robots.txt` allowing all crawlers
 - `sitemap.ts` generates `/sitemap.xml` with all routes and last-modified dates
 
@@ -50,7 +51,7 @@ Components use `Pick<Course, ...>` for props to receive only required data, avoi
 
 ### Styling
 
-SCSS architecture with CSS Custom Properties for theming:
+Pure SCSS architecture with CSS Custom Properties for theming:
 
 ```
 src/styles/
@@ -59,16 +60,21 @@ src/styles/
 └── _mixins.scss      # Responsive breakpoints, utilities
 ```
 
-Dark mode is automatic via `prefers-color-scheme` media queries.
+- **CSS Modules** for component-scoped styles (`*.module.scss`)
+- **Global utilities** defined in `globals.scss`
+- **CSS Custom Properties** for runtime theming
+- Dark mode is automatic via `prefers-color-scheme` media queries
 
 ### Type Safety
 
 Strict TypeScript configuration with additional checks:
+
 - `noUnusedLocals` / `noUnusedParameters`
 - `noUncheckedIndexedAccess`
 - `exactOptionalPropertyTypes`
 
 Domain types in `src/types/index.ts` with utility types for common patterns:
+
 - `CoursePreview` for list views
 - `CourseCreateInput` / `CourseUpdateInput` for mutations
 

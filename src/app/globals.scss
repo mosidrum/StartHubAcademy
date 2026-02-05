@@ -2,8 +2,6 @@
 @use '../styles/variables' as vars;
 @use '../styles/mixins' as mix;
 
-@import 'tailwindcss';
-
 :root {
   --color-primary: #{palette.color('primary-600')};
   --color-background: #{palette.color('neutral-50')};
@@ -30,13 +28,6 @@
   }
 }
 
-@theme inline {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-}
-
 *,
 *::before,
 *::after {
@@ -57,35 +48,79 @@ body {
   color: var(--color-text-primary);
 }
 
-img, video {
+img,
+video {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-weight: vars.$font-weight-semibold;
   line-height: vars.$line-height-tight;
   text-wrap: balance;
 }
 
-h1 { font-size: vars.$font-size-4xl; }
-h2 { font-size: vars.$font-size-3xl; }
-h3 { font-size: vars.$font-size-2xl; }
-h4 { font-size: vars.$font-size-xl; }
+h1 {
+  font-size: vars.$font-size-4xl;
+}
+h2 {
+  font-size: vars.$font-size-3xl;
+}
+h3 {
+  font-size: vars.$font-size-2xl;
+}
+h4 {
+  font-size: vars.$font-size-xl;
+}
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 
 a {
   color: var(--color-primary);
   text-decoration: none;
 }
 
+// Layout
 .container {
   @include mix.container;
 }
 
+// Spacing
+.py-4 {
+  padding-block: vars.$spacing-4;
+}
+
+.py-8 {
+  padding-block: vars.$spacing-8;
+}
+
+// Typography
+.text-sm {
+  font-size: vars.$font-size-sm;
+}
+
+.text-xl {
+  font-size: vars.$font-size-xl;
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+// Accessibility
 .sr-only {
   position: absolute;
   width: 1px;

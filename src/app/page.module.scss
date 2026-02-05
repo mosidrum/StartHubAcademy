@@ -1,0 +1,41 @@
+@use '../styles/variables' as vars;
+@use '../styles/mixins' as mix;
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: vars.$spacing-6;
+  padding: vars.$spacing-8;
+  text-align: center;
+}
+
+.description {
+  max-width: 28rem;
+  color: var(--color-text-secondary);
+  font-size: vars.$font-size-lg;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding-inline: vars.$spacing-6;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: vars.$radius-lg;
+  font-weight: vars.$font-weight-medium;
+  transition: opacity vars.$transition-normal;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

@@ -12,6 +12,10 @@ import {
   CourseFooter,
 } from './_components';
 
+/**
+ * Generates Schema.org Course structured data for rich search results.
+ * @see https://schema.org/Course
+ */
 function generateCourseJsonLd(course: Course): object {
   return {
     '@context': 'https://schema.org',
@@ -57,6 +61,10 @@ interface CoursePageProps {
   params: Promise<{ slug: string }>;
 }
 
+/**
+ * Dynamic metadata resolved at request time for SEO.
+ * Next.js calls this before rendering, deduplicating the data fetch.
+ */
 export async function generateMetadata({
   params,
 }: CoursePageProps): Promise<Metadata> {
@@ -98,6 +106,10 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Server Component - no client JS shipped.
+ * Data fetching happens directly in the component body.
+ */
 export default async function CoursePage({ params }: CoursePageProps) {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
@@ -110,6 +122,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   return (
     <main className="container py-8">
+      {/* JSON-LD injected in <main> to keep <head> clean; search engines parse it anywhere */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

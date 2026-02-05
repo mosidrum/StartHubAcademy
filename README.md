@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Course Hub
 
-## Getting Started
+A Next.js 16 application demonstrating production-grade SSR and SEO patterns.
 
-First, run the development server:
+## Architecture Decisions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Server-Side Rendering (SSR)
+
+All course pages are **Server Components by default**. This approach:
+
+- Eliminates client-side JavaScript for content pages
+- Enables direct data fetching in components via `async/await`
+- Reduces Time to First Byte (TTFB) with server-rendered HTML
+- Ensures search engines receive complete content on first request
+
+```tsx
+// Data fetching happens at the component level, not in useEffect
+export default async function CoursePage({ params }) {
+  const course = await getCourseBySlug(slug); // Runs on server only
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The `server-only` package marks data-fetching modules to prevent accidental client imports.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### SEO Strategy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Dynamic Metadata**: Each route exports `generateMetadata` for unique titles, descriptions, and Open Graph tags resolved at request time.
 
-## Learn More
+**JSON-LD Structured Data**: Course pages include Schema.org `Course` markup for rich search results. The schema is serialized server-side and injected as `<script type="application/ld+json">`.
 
-To learn more about Next.js, take a look at the following resources:
+**Crawlability**:
+- `robots.ts` generates `/robots.txt` allowing all crawlers
+- `sitemap.ts` generates `/sitemap.xml` with all routes and last-modified dates
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Component Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/app/courses/[slug]/
+├── page.tsx              # Data fetching + composition
+├── layout.tsx            # Route-specific layout boundary
+└── _components/          # Presentational server components
+    ├── CourseHeader.tsx
+    ├── CourseDetails.tsx
+    ├── CourseTopics.tsx
+    ├── CourseSkills.tsx
+    └── CourseFooter.tsx
+```
 
-## Deploy on Vercel
+Components use `Pick<Course, ...>` for props to receive only required data, avoiding prop drilling of entire objects.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Styling
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+SCSS architecture with CSS Custom Properties for theming:
+
+```
+src/styles/
+├── _palette.scss     # Color definitions + color() helper
+├── _variables.scss   # Design tokens (spacing, typography, shadows)
+└── _mixins.scss      # Responsive breakpoints, utilities
+```
+
+Dark mode is automatic via `prefers-color-scheme` media queries.
+
+### Type Safety
+
+Strict TypeScript configuration with additional checks:
+- `noUnusedLocals` / `noUnusedParameters`
+- `noUncheckedIndexedAccess`
+- `exactOptionalPropertyTypes`
+
+Domain types in `src/types/index.ts` with utility types for common patterns:
+- `CoursePreview` for list views
+- `CourseCreateInput` / `CourseUpdateInput` for mutations
+
+## Development
+
+```bash
+npm run dev       # Start development server
+npm run build     # Production build
+npm run lint      # ESLint
+npm run format    # Prettier
+```
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx          # Root layout with fonts, metadata
+│   ├── globals.scss        # Global styles
+│   ├── robots.ts           # robots.txt generation
+│   ├── sitemap.ts          # sitemap.xml generation
+│   └── courses/
+│       ├── page.tsx        # /courses listing
+│       └── [slug]/         # /courses/:slug dynamic route
+├── lib/                    # Server utilities
+│   ├── mock-data.ts        # Mock courses/providers
+│   └── getCourseBySlug.ts  # Data fetching (server-only)
+├── styles/                 # SCSS architecture
+└── types/                  # TypeScript definitions
+```

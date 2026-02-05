@@ -2,6 +2,48 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getCourseBySlug } from '@/lib/getCourseBySlug';
+import type { Course } from '@/types';
+
+function generateCourseJsonLd(course: Course): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: course.title,
+    description: course.description,
+    provider: {
+      '@type': 'Organization',
+      name: course.providerId,
+      sameAs: course.providerUrl,
+    },
+    instructor: course.instructors.map((name) => ({
+      '@type': 'Person',
+      name,
+    })),
+    educationalLevel: course.level,
+    inLanguage: course.metadata.language,
+    datePublished: course.createdAt,
+    dateModified: course.updatedAt,
+    ...(course.thumbnail && { image: course.thumbnail }),
+    ...(course.metadata.rating && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: course.metadata.rating,
+        reviewCount: course.metadata.reviewCount,
+      },
+    }),
+    offers: {
+      '@type': 'Offer',
+      price: course.price.amount,
+      priceCurrency: course.price.currency,
+      availability: 'https://schema.org/InStock',
+    },
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'online',
+      duration: `PT${course.duration.hours}H${course.duration.minutes}M`,
+    },
+  };
+}
 
 interface CoursePageProps {
   params: Promise<{ slug: string }>;
@@ -56,8 +98,16 @@ export default async function CoursePage({ params }: CoursePageProps) {
     notFound();
   }
 
+  const jsonLd = generateCourseJsonLd(course);
+
   return (
     <main className="container py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
       <article aria-labelledby="course-title">
         <header>
           <p className="text-sm text-[var(--color-text-secondary)]">

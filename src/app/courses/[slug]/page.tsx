@@ -1,9 +1,35 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getCourseBySlug } from '@/lib/getCourseBySlug';
 
 interface CoursePageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: CoursePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const course = await getCourseBySlug(slug);
+
+  if (!course) {
+    return {
+      title: 'Course Not Found',
+    };
+  }
+
+  return {
+    title: course.title,
+    description: course.shortDescription ?? course.description,
+    keywords: [...course.topics, ...course.skills],
+    openGraph: {
+      title: course.title,
+      description: course.shortDescription ?? course.description,
+      type: 'article',
+      ...(course.thumbnail && { images: [course.thumbnail] }),
+    },
+  };
 }
 
 export default async function CoursePage({ params }: CoursePageProps) {

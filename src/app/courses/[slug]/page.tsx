@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { getCourseBySlug } from '@/lib/getCourseBySlug';
 import type { Course } from '@/types';
+import Breadcrumb from '@/app/_components/Breadcrumb';
 
 import {
   CourseHeader,
@@ -11,11 +12,9 @@ import {
   CourseSkills,
   CourseFooter,
 } from './_components';
+import styles from './page.module.scss';
 
-/**
- * Generates Schema.org Course structured data for rich search results.
- * @see https://schema.org/Course
- */
+// Build the JSON-LD object Google uses for rich snippets
 function generateCourseJsonLd(course: Course): object {
   return {
     '@context': 'https://schema.org',
@@ -61,10 +60,7 @@ interface CoursePageProps {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * Dynamic metadata resolved at request time for SEO.
- * Next.js calls this before rendering, deduplicating the data fetch.
- */
+// Next.js calls this at request time to set the page's <title>, description, and OG tags
 export async function generateMetadata({
   params,
 }: CoursePageProps): Promise<Metadata> {
@@ -106,10 +102,6 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Server Component - no client JS shipped.
- * Data fetching happens directly in the component body.
- */
 export default async function CoursePage({ params }: CoursePageProps) {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
@@ -121,14 +113,15 @@ export default async function CoursePage({ params }: CoursePageProps) {
   const jsonLd = generateCourseJsonLd(course);
 
   return (
-    <main className="container py-8">
-      {/* JSON-LD injected in <main> to keep <head> clean; search engines parse it anywhere */}
+    <main className={styles.page}>
+      {/* JSON-LD — Google reads this from anywhere in the DOM */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd),
         }}
       />
+      <Breadcrumb href="/courses" label="Courses" />
       <article aria-labelledby="course-title">
         <CourseHeader
           title={course.title}

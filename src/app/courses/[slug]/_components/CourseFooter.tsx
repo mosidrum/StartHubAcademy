@@ -1,10 +1,12 @@
+import styles from '../page.module.scss';
+
 type Props = {
   lastUpdated: string;
 };
 
 export function CourseFooter({ lastUpdated }: Props) {
   return (
-    <footer className="py-4 text-sm text-muted">
+    <footer className={styles.footer}>
       <p>
         Last updated:{' '}
         <time dateTime={lastUpdated}>

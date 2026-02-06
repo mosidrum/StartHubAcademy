@@ -1,107 +1,64 @@
 # Course Hub
 
-A Next.js 16 application demonstrating production-grade SSR and SEO patterns.
+Next.js 16 app. Courses rendered server-side, with structured data for SEO.
 
-## Architecture Decisions
+## How SSR works here
 
-### Server-Side Rendering (SSR)
-
-All course pages are **Server Components by default**. This approach:
-
-- Eliminates client-side JavaScript for content pages
-- Enables direct data fetching in components via `async/await`
-- Reduces Time to First Byte (TTFB) with server-rendered HTML
-- Ensures search engines receive complete content on first request
+Every page is a Server Component. No `useEffect`, no client-side fetches for content. The component is `async`, fetches data directly, and returns HTML. The browser gets fully rendered markup on the first response — nothing to hydrate.
 
 ```tsx
-// Data fetching happens at the component level, not in useEffect
 export default async function CoursePage({ params }) {
-  const course = await getCourseBySlug(slug); // Runs on server only
+  const course = await getCourseBySlug(slug);
+  // returns HTML, no JS bundle for this page
 }
 ```
 
-The `server-only` package marks data-fetching modules to prevent accidental client imports.
+Data-fetching modules use the `server-only` package so they can't accidentally end up in a client bundle.
 
-### SEO Strategy
+## Dynamic metadata
 
-**Dynamic Metadata**: Each route exports `generateMetadata` for unique titles, descriptions, and Open Graph tags resolved at request time.
+Each course page exports a `generateMetadata` function. Next.js calls it at request time before rendering. It sets the `<title>`, `<meta name="description">`, and Open Graph tags from the course data — so every page has unique, crawlable metadata without any client JS.
 
-**JSON-LD Structured Data**: Course pages include Schema.org `Course` markup for rich search results. The schema is serialized server-side and injected as `<script type="application/ld+json">`.
+## Structured data (JSON-LD)
 
-**Crawlability**:
+Course pages include a `<script type="application/ld+json">` block with Schema.org `Course` markup. It covers name, description, provider, instructors, price, rating, and duration. Google picks this up for rich snippets in search results.
 
-- `robots.ts` generates `/robots.txt` allowing all crawlers
-- `sitemap.ts` generates `/sitemap.xml` with all routes and last-modified dates
+The JSON-LD sits inside `<main>`, not `<head>` — search engines parse it from anywhere in the DOM.
 
-### Component Architecture
+## Performance
 
-```
-src/app/courses/[slug]/
-├── page.tsx              # Data fetching + composition
-├── layout.tsx            # Route-specific layout boundary
-└── _components/          # Presentational server components
-    ├── CourseHeader.tsx
-    ├── CourseDetails.tsx
-    ├── CourseTopics.tsx
-    ├── CourseSkills.tsx
-    └── CourseFooter.tsx
-```
+The goal is 90+ on Lighthouse for both Performance and SEO.
 
-Components use `Pick<Course, ...>` for props to receive only required data, avoiding prop drilling of entire objects.
+What keeps the scores high:
+- Server Components mean zero JS shipped for content pages
+- Fonts use `display: swap` and are self-hosted via `next/font`
+- No layout shift — content arrives fully rendered
+- `robots.ts` and `sitemap.ts` handle crawlability out of the box
 
-### Styling
-
-Pure SCSS architecture with CSS Custom Properties for theming:
-
-```
-src/styles/
-├── _palette.scss     # Color definitions + color() helper
-├── _variables.scss   # Design tokens (spacing, typography, shadows)
-└── _mixins.scss      # Responsive breakpoints, utilities
-```
-
-- **CSS Modules** for component-scoped styles (`*.module.scss`)
-- **Global utilities** defined in `globals.scss`
-- **CSS Custom Properties** for runtime theming
-- Dark mode is automatic via `prefers-color-scheme` media queries
-
-### Type Safety
-
-Strict TypeScript configuration with additional checks:
-
-- `noUnusedLocals` / `noUnusedParameters`
-- `noUncheckedIndexedAccess`
-- `exactOptionalPropertyTypes`
-
-Domain types in `src/types/index.ts` with utility types for common patterns:
-
-- `CoursePreview` for list views
-- `CourseCreateInput` / `CourseUpdateInput` for mutations
-
-## Development
-
-```bash
-npm run dev       # Start development server
-npm run build     # Production build
-npm run lint      # ESLint
-npm run format    # Prettier
-```
-
-## Project Structure
+## Project structure
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout with fonts, metadata
-│   ├── globals.scss        # Global styles
-│   ├── robots.ts           # robots.txt generation
-│   ├── sitemap.ts          # sitemap.xml generation
-│   └── courses/
-│       ├── page.tsx        # /courses listing
-│       └── [slug]/         # /courses/:slug dynamic route
-├── lib/                    # Server utilities
-│   ├── mock-data.ts        # Mock courses/providers
-│   └── getCourseBySlug.ts  # Data fetching (server-only)
-├── styles/                 # SCSS architecture
-└── types/                  # TypeScript definitions
+├── app/
+│   ├── layout.tsx              # root layout, fonts, base metadata
+│   ├── courses/
+│   │   ├── page.tsx            # /courses listing
+│   │   └── [slug]/
+│   │       ├── page.tsx        # course detail (SSR + JSON-LD + metadata)
+│   │       └── _components/    # presentational pieces
+│   ├── robots.ts
+│   └── sitemap.ts
+├── lib/
+│   ├── mock-data.ts            # fake courses for demo
+│   └── getCourseBySlug.ts      # data fetch (server-only)
+├── styles/                     # SCSS tokens and mixins
+└── types/
+```
+
+## Dev
+
+```bash
+npm run dev
+npm run build
+npm run lint
 ```

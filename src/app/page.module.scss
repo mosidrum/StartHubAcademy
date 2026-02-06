@@ -1,41 +1,496 @@
 @use '../styles/variables' as vars;
 @use '../styles/mixins' as mix;
+@use '../styles/palette' as palette;
 
-.wrapper {
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
+/* ───────────────────────────────────
+   Shared
+   ─────────────────────────────────── */
+
+.container {
+  @include mix.container;
 }
 
-.main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: vars.$spacing-6;
-  padding: vars.$spacing-8;
-  text-align: center;
+.section {
+  padding-block: vars.$spacing-12;
 }
 
-.description {
-  max-width: 28rem;
+.sectionTitle {
+  font-size: vars.$font-size-3xl;
+  font-weight: vars.$font-weight-bold;
+
+  @include mix.md {
+    font-size: vars.$font-size-4xl;
+  }
+}
+
+.sectionSubtitle {
   color: var(--color-text-secondary);
+  margin-top: vars.$spacing-2;
   font-size: vars.$font-size-lg;
 }
 
-.link {
+.sectionHeader {
+  @include mix.flex-between;
+  flex-wrap: wrap;
+  gap: vars.$spacing-4;
+  margin-bottom: vars.$spacing-6;
+}
+
+.viewAll {
+  font-weight: vars.$font-weight-semibold;
+  font-size: vars.$font-size-sm;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────
+   Hero
+   ─────────────────────────────────── */
+
+.hero {
+  background:
+    linear-gradient(
+      135deg,
+      palette.color('primary-600') 0%,
+      palette.color('primary-800') 100%
+    );
+  color: #fff;
+  overflow: hidden;
+}
+
+.heroInner {
+  @include mix.container;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$spacing-8;
+  padding-block: vars.$spacing-10;
+
+  @include mix.lg {
+    flex-direction: row;
+    align-items: center;
+    padding-block: vars.$spacing-16;
+  }
+}
+
+.heroContent {
+  flex: 1 1 0%;
+  max-width: 34rem;
+}
+
+.heroTitle {
+  font-size: 2.5rem;
+  font-weight: vars.$font-weight-bold;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+
+  @include mix.md {
+    font-size: 3.5rem;
+  }
+}
+
+.heroSubtitle {
+  margin-top: vars.$spacing-4;
+  font-size: vars.$font-size-lg;
+  line-height: vars.$line-height-relaxed;
+  color: rgba(255, 255, 255, 0.85);
+
+  @include mix.md {
+    font-size: vars.$font-size-xl;
+  }
+}
+
+.heroCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: vars.$spacing-3;
+  margin-top: vars.$spacing-6;
+}
+
+.btnPrimary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 3rem;
   padding-inline: vars.$spacing-6;
-  background-color: var(--color-primary);
-  color: #fff;
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-semibold;
+  color: palette.color('primary-700');
+  background: #fff;
   border-radius: vars.$radius-lg;
+  text-decoration: none;
+  transition: opacity vars.$transition-fast;
+
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding-inline: vars.$spacing-6;
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-semibold;
+  color: #fff;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: vars.$radius-lg;
+  text-decoration: none;
+  transition: border-color vars.$transition-fast, background vars.$transition-fast;
+
+  &:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.heroNote {
+  margin-top: vars.$spacing-4;
+  font-size: vars.$font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.heroVisual {
+  flex: 1 1 0%;
+  display: none;
+
+  @include mix.lg {
+    display: block;
+  }
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  border-radius: vars.$radius-xl;
+  box-shadow: vars.$shadow-xl;
+}
+
+/* ───────────────────────────────────
+   Stats Bar
+   ─────────────────────────────────── */
+
+.statsBar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.statsInner {
+  @include mix.container;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: vars.$spacing-6;
+  padding-block: vars.$spacing-6;
+
+  @include mix.md {
+    grid-template-columns: repeat(4, 1fr);
+    padding-block: vars.$spacing-8;
+  }
+}
+
+.stat {
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: vars.$font-size-3xl;
+  font-weight: vars.$font-weight-bold;
+  color: var(--color-primary);
+  line-height: 1;
+
+  @include mix.md {
+    font-size: vars.$font-size-4xl;
+  }
+}
+
+.statLabel {
+  display: block;
+  margin-top: vars.$spacing-1;
+  font-size: vars.$font-size-sm;
+  color: var(--color-text-secondary);
   font-weight: vars.$font-weight-medium;
-  transition: opacity vars.$transition-normal;
+}
+
+/* ───────────────────────────────────
+   Topics
+   ─────────────────────────────────── */
+
+.topicList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: vars.$spacing-3;
+  margin-top: vars.$spacing-6;
+}
+
+.topicPill {
+  display: inline-flex;
+  align-items: center;
+  padding: vars.$spacing-2 vars.$spacing-4;
+  font-size: vars.$font-size-sm;
+  font-weight: vars.$font-weight-medium;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: vars.$radius-full;
+  text-decoration: none;
+  transition:
+    border-color vars.$transition-fast,
+    background vars.$transition-fast,
+    color vars.$transition-fast;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+  }
+}
+
+/* ───────────────────────────────────
+   Course Grid / Cards
+   ─────────────────────────────────── */
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: vars.$spacing-5;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: vars.$radius-lg;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    box-shadow vars.$transition-normal,
+    transform vars.$transition-normal;
+
+  &:hover {
+    box-shadow: vars.$shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+.cardThumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-border);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cardBody {
+  padding: vars.$spacing-3 vars.$spacing-4 vars.$spacing-4;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cardTitle {
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-bold;
+  line-height: vars.$line-height-tight;
+  @include mix.line-clamp(2);
+  margin: 0;
+}
+
+.cardInstructors {
+  font-size: vars.$font-size-xs;
+  color: var(--color-text-muted);
+  margin: vars.$spacing-1 0 0;
+  @include mix.text-truncate;
+}
+
+.cardRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: vars.$spacing-2;
+  font-size: vars.$font-size-sm;
+}
+
+.ratingValue {
+  font-weight: vars.$font-weight-bold;
+  color: palette.color('warning');
+}
+
+.stars {
+  color: palette.color('warning');
+  font-size: vars.$font-size-xs;
+  letter-spacing: -1px;
+}
+
+.ratingCount {
+  color: var(--color-text-muted);
+  font-size: vars.$font-size-xs;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: vars.$spacing-2;
+  margin-top: vars.$spacing-1;
+  font-size: vars.$font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.cardLevel {
+  text-transform: capitalize;
+}
+
+.cardDuration {
+  // inherits from .cardMeta
+}
+
+.cardPrice {
+  margin: vars.$spacing-2 0 0;
+  font-size: vars.$font-size-lg;
+  font-weight: vars.$font-weight-bold;
+}
+
+.free {
+  color: palette.color('success');
+}
+
+.providerTag {
+  position: absolute;
+  top: vars.$spacing-2;
+  left: vars.$spacing-2;
+  font-size: 0.6875rem;
+  font-weight: vars.$font-weight-semibold;
+  padding: 2px vars.$spacing-2;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border-radius: vars.$radius-sm;
+  letter-spacing: 0.02em;
+}
+
+/* ───────────────────────────────────
+   CTA Section
+   ─────────────────────────────────── */
+
+.cta {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+.ctaInner {
+  @include mix.container;
+  text-align: center;
+  padding-block: vars.$spacing-16;
+  max-width: 40rem;
+}
+
+.ctaTitle {
+  font-size: vars.$font-size-3xl;
+  font-weight: vars.$font-weight-bold;
+
+  @include mix.md {
+    font-size: vars.$font-size-4xl;
+  }
+}
+
+.ctaText {
+  margin-top: vars.$spacing-4;
+  font-size: vars.$font-size-lg;
+  color: var(--color-text-secondary);
+  line-height: vars.$line-height-relaxed;
+}
+
+.btnPrimaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  padding-inline: vars.$spacing-8;
+  margin-top: vars.$spacing-6;
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-semibold;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: vars.$radius-lg;
+  text-decoration: none;
+  transition: opacity vars.$transition-fast;
 
   &:hover {
     opacity: 0.9;
+  }
+}
+
+/* ───────────────────────────────────
+   Footer
+   ─────────────────────────────────── */
+
+.footer {
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border);
+}
+
+.footerInner {
+  @include mix.container;
+  padding-block: vars.$spacing-10;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$spacing-6;
+
+  @include mix.md {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.footerBrand {
+  flex-shrink: 0;
+}
+
+.footerLogo {
+  font-size: vars.$font-size-xl;
+  font-weight: vars.$font-weight-bold;
+  color: var(--color-text-primary);
+}
+
+.footerTagline {
+  margin-top: vars.$spacing-1;
+  font-size: vars.$font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: vars.$spacing-5;
+
+  a {
+    font-size: vars.$font-size-sm;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color vars.$transition-fast;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.footerCopy {
+  font-size: vars.$font-size-xs;
+  color: var(--color-text-muted);
+
+  @include mix.md {
+    text-align: right;
   }
 }

@@ -1,0 +1,19 @@
+@use '../../styles/variables' as vars;
+
+.breadcrumb {
+  margin-bottom: vars.$spacing-4;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: vars.$spacing-1;
+  font-size: vars.$font-size-sm;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color vars.$transition-fast;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

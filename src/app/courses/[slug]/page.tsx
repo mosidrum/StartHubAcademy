@@ -127,6 +127,10 @@ export default async function CoursePage({ params }: CoursePageProps) {
           title={course.title}
           description={course.description}
           level={course.level}
+          thumbnail={course.thumbnail}
+          providerId={course.providerId}
+          rating={course.metadata.rating}
+          reviewCount={course.metadata.reviewCount}
         />
         <CourseDetails
           duration={course.duration}

@@ -20,12 +20,52 @@
     );
   color: #fff;
   border-radius: vars.$radius-xl;
-  padding: vars.$spacing-8;
+  overflow: hidden;
   margin-bottom: vars.$spacing-6;
 
   @include mix.md {
-    padding: vars.$spacing-10;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: stretch;
   }
+}
+
+.heroImageWrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  @include mix.md {
+    width: 45%;
+    aspect-ratio: auto;
+  }
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroContent {
+  padding: vars.$spacing-6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include mix.md {
+    flex: 1;
+    padding: vars.$spacing-8 vars.$spacing-10;
+  }
+}
+
+.heroBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: vars.$spacing-2;
+  margin-bottom: vars.$spacing-3;
 }
 
 .levelBadge {
@@ -38,7 +78,18 @@
   border-radius: vars.$radius-full;
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  margin-bottom: vars.$spacing-3;
+}
+
+.providerBadge {
+  display: inline-block;
+  font-size: vars.$font-size-xs;
+  font-weight: vars.$font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: vars.$spacing-1 vars.$spacing-3;
+  border-radius: vars.$radius-full;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .heroTitle {
@@ -58,6 +109,26 @@
   line-height: vars.$line-height-relaxed;
   color: rgba(255, 255, 255, 0.85);
   max-width: 48rem;
+}
+
+.heroRating {
+  display: flex;
+  align-items: center;
+  gap: vars.$spacing-1;
+  margin-top: vars.$spacing-4;
+  font-size: vars.$font-size-base;
+  font-weight: vars.$font-weight-semibold;
+  color: #fff;
+}
+
+.star {
+  color: palette.color('warning');
+}
+
+.heroReviewCount {
+  font-weight: vars.$font-weight-normal;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: vars.$spacing-1;
 }
 
 /* ───────────────────────────────────
